@@ -1,1 +1,119 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+/*
+ * Visual language inspired by incubyte.co: deep green + lime accent on mint, Fraunces serif headings,
+ * Inclusive Sans body, pill-shaped buttons and generously rounded cards.
+ */
+$green: #014d43;
+$green-dark: #013a33;
+$lime: #d3fe73;
+$mint: #ebfff6;
+$ink: #0a0a0d;
+$muted: #5b6b66;
+$line: #cde8db;
+
+html {
+  color-scheme: light;
+  @include mat.theme((
+    color: (
+      primary: mat.$green-palette,
+      tertiary: mat.$chartreuse-palette,
+    ),
+    typography: (
+      plain-family: ('Inclusive Sans', sans-serif),
+      brand-family: ('Fraunces', serif),
+    ),
+    density: 0,
+  ));
+}
+
+html {
+  // Pin the system tokens Material components read to the exact brand colours.
+  --mat-sys-primary: #{$green};
+  --mat-sys-on-primary: #{$mint};
+  --mat-sys-primary-container: #{$lime};
+  --mat-sys-on-primary-container: #{$green};
+  --mat-sys-secondary-container: #{$lime};
+  --mat-sys-on-secondary-container: #{$green};
+  --mat-sys-surface: #ffffff;
+  --mat-sys-surface-container-lowest: #ffffff;
+  --mat-sys-surface-container-low: #f7fffb;
+  --mat-sys-surface-container: #{$mint};
+  --mat-sys-surface-container-high: #ffffff;
+  --mat-sys-on-surface: #{$ink};
+  --mat-sys-on-surface-variant: #{$muted};
+  --mat-sys-outline: #8fb5a6;
+  --mat-sys-outline-variant: #{$line};
+
+  --brand-green: #{$green};
+  --brand-green-dark: #{$green-dark};
+  --brand-lime: #{$lime};
+  --brand-mint: #{$mint};
+  --brand-ink: #{$ink};
+}
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: 'Inclusive Sans', 'Helvetica Neue', sans-serif;
+  background: $mint;
+  color: $ink;
+}
+
+h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  color: $green;
+  margin: 0 0 6px;
+}
+
+h2 { font-family: 'Fraunces', serif; font-weight: 400; color: $green; }
+
+.subtitle { color: $muted; font-size: 16px; margin: 0 0 24px; max-width: 760px; }
+
+/* Right-align numbers so magnitudes are easy to compare down a column. */
+.num { text-align: right !important; font-variant-numeric: tabular-nums; }
+
+/* Pill buttons: green fill, lime on hover — as on incubyte.co. */
+.mat-mdc-unelevated-button.mat-mdc-button-base {
+  --mdc-filled-button-container-shape: 999px;
+  --mdc-filled-button-container-color: #{$green};
+  --mdc-filled-button-label-text-color: #{$mint};
+  height: 44px;
+  padding: 0 24px;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &:not(:disabled):hover {
+    --mdc-filled-button-container-color: #{$lime};
+    --mdc-filled-button-label-text-color: #{$green};
+  }
+}
+
+.mat-mdc-button.mat-mdc-button-base,
+.mat-mdc-outlined-button.mat-mdc-button-base {
+  --mdc-text-button-container-shape: 999px;
+  --mdc-outlined-button-container-shape: 999px;
+}
+
+/* Tables: brand-coloured header, soft row hover. */
+.mat-mdc-header-row {
+  --mat-table-header-headline-color: #{$green};
+  --mat-table-header-headline-weight: 600;
+  background: #f4fff9;
+}
+.mat-mdc-row:hover { background: #f4fff9; }
+
+/* Dialogs and cards share the generous radius used across incubyte.co. */
+.mat-mdc-dialog-container { --mdc-dialog-container-shape: 28px; }
+.mat-mdc-dialog-title { font-family: 'Fraunces', serif !important; color: $green !important; }
+
+.mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: #{$green};
+  --mdc-snackbar-supporting-text-color: #{$mint};
+  --mat-snack-bar-button-color: #{$lime};
+}
