@@ -1,0 +1,56 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.back { margin: -16px 0 12px -12px; }
+
+/* Stat tiles: deep green with lime figures, the signature contrast of the brand palette. */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 22px 26px;
+  border-radius: 28px;
+  background: var(--brand-green);
+  color: var(--brand-mint);
+
+  .label { font-size: 14px; letter-spacing: 0.4px; text-transform: uppercase; opacity: 0.85; }
+  .value {
+    font-family: 'Fraunces', serif;
+    font-size: 34px;
+    line-height: 1.1;
+    color: var(--brand-lime);
+    font-variant-numeric: tabular-nums;
+  }
+  .value.small { font-size: 22px; }
+  .hint { font-size: 13px; opacity: 0.75; }
+}
+
+.card {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 28px;
+  overflow: hidden;
+  background: #fff;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 22px 24px 12px;
+    font-size: 24px;
+  }
+}
+
+.error { color: var(--mat-sys-error); }

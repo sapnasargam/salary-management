@@ -1,0 +1,69 @@
+<a mat-button routerLink="/insights" class="back"><mat-icon>arrow_back</mat-icon> All countries</a>
+
+<header class="page-header">
+  <div>
+    <h1>{{ detail()?.countryName ?? countryCode() }}</h1>
+    @if (detail(); as d) {
+      <p class="subtitle">All amounts in {{ d.currency }}, gross per year.</p>
+    }
+  </div>
+  @if (countries().length) {
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>Country</mat-label>
+      <mat-select [value]="countryCode().toUpperCase()" (valueChange)="switchCountry($event)">
+        @for (country of countries(); track country.code) {
+          <mat-option [value]="country.code">{{ country.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  }
+</header>
+
+@if (loading()) {
+  <mat-progress-bar mode="indeterminate" />
+}
+@if (error(); as message) {
+  <p class="error" role="alert">{{ message }}</p>
+}
+
+@if (detail(); as d) {
+  @if (d.salary.headcount === 0) {
+    <p class="subtitle">No employees in {{ d.countryName }} yet.</p>
+  } @else {
+    <section class="tiles">
+      <div class="tile">
+        <span class="label">Employees</span>
+        <span class="value">{{ d.salary.headcount | number }}</span>
+      </div>
+      <div class="tile">
+        <span class="label">Median salary</span>
+        <span class="value">{{ d.salary.median | currency: d.currency : 'symbol-narrow' : '1.0-0' }}</span>
+        <span class="hint">what a typical employee earns</span>
+      </div>
+      <div class="tile">
+        <span class="label">Average salary</span>
+        <span class="value">{{ d.salary.average | currency: d.currency : 'symbol-narrow' : '1.0-0' }}</span>
+      </div>
+      <div class="tile">
+        <span class="label">Range</span>
+        <span class="value small">
+          {{ d.salary.min | currency: d.currency : 'symbol-narrow' : '1.0-0' }} –
+          {{ d.salary.max | currency: d.currency : 'symbol-narrow' : '1.0-0' }}
+        </span>
+      </div>
+    </section>
+
+    <section class="card">
+      <mat-tab-group animationDuration="0ms">
+        <mat-tab label="By job title">
+          <app-salary-stats-table [rows]="byJobTitle()" labelHeader="Job title"
+                                  linkTooltip="See these employees" />
+        </mat-tab>
+        <mat-tab label="By department">
+          <app-salary-stats-table [rows]="byDepartment()" labelHeader="Department"
+                                  linkTooltip="See these employees" />
+        </mat-tab>
+      </mat-tab-group>
+    </section>
+  }
+}
