@@ -5,6 +5,10 @@ A web app for ACME's HR Manager to manage salaries of 10,000 employees across 10
 
 **Stack:** Java 17 · Spring Boot 3 · SQLite + Flyway · Angular 19 · Angular Material
 
+**Live demo:** https://salary-management-f1ne.onrender.com
+> Hosted on Render's free plan: the first load after a period of inactivity can take ~50 seconds while the
+> instance wakes up. The demo data (10,000 employees) is re-seeded whenever the instance restarts.
+
 | Doc | What's inside |
 |-----|---------------|
 | [docs/01-requirements.md](docs/01-requirements.md) | One-page requirements: goal, scope, what's left out and why |
