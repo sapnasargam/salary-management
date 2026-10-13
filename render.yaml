@@ -1,0 +1,12 @@
+# One-click deploy on Render (https://render.com): New → Blueprint → select this repository.
+# The free plan has no persistent disk, so the database is re-seeded with the same 10,000
+# deterministic employees whenever the service restarts; edits survive only until then.
+services:
+  - type: web
+    name: salary-management
+    runtime: docker
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: APP_DB_PATH
+        value: /data/salary.db
