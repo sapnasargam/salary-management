@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    # A fresh throw-away database file per Spring context keeps integration tests isolated.
+    url: jdbc:sqlite:target/test-${random.uuid}.db?journal_mode=WAL&busy_timeout=5000&foreign_keys=true&date_class=TEXT&date_string_format=yyyy-MM-dd
+
+app:
+  seed:
+    enabled: false

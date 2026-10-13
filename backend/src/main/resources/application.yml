@@ -1,0 +1,37 @@
+server:
+  port: ${PORT:8080}
+  compression:
+    enabled: true
+
+spring:
+  application:
+    name: salary-management
+  datasource:
+    # WAL + busy_timeout let reads continue while a write is in progress.
+    # Dates are stored as ISO text (yyyy-MM-dd) so the file is human-readable.
+    url: jdbc:sqlite:${APP_DB_PATH:salary.db}?journal_mode=WAL&busy_timeout=5000&foreign_keys=true&date_class=TEXT&date_string_format=yyyy-MM-dd
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      maximum-pool-size: 4
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    open-in-view: false
+    hibernate:
+      ddl-auto: none   # schema is owned by Flyway migrations
+  flyway:
+    locations: classpath:db/migration
+
+app:
+  seed:
+    # Seeds the database on startup only when it is empty (idempotent).
+    enabled: ${APP_SEED_ENABLED:true}
+    count: ${APP_SEED_COUNT:10000}
+    random-seed: 42
+    # When true, existing employees are deleted and the dataset regenerated.
+    reset: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
