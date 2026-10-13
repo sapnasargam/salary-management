@@ -6,7 +6,7 @@ services:
     name: salary-management
     runtime: docker
     plan: free
-    healthCheckPath: /actuator/health
+    healthCheckPath: /api/reference-data
     envVars:
       - key: APP_DB_PATH
         value: /data/salary.db

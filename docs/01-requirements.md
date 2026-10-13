@@ -15,7 +15,7 @@ countries** with a web application where an **HR Manager** can (1) maintain empl
 ## Scope & features (in)
 | # | Feature | Why |
 |---|---------|-----|
-| F1 | **Employee directory** — paginated table, search by name/email/code, filter by country / department / job title, sortable columns | Excel-like browsing, but fast for 10k rows |
+| F1 | **Employee directory** — paginated table, search by name/email, filter by country / department / job title, sortable columns | Excel-like browsing, but fast for 10k rows |
 | F2 | **Add / edit / delete employee** with server-side validation | Core data maintenance; validation prevents the bad data typical in spreadsheets |
 | F3 | **Currency derived from country** (employee in India ⇒ INR) | Removes a whole class of data-entry mistakes |
 | F4 | **Org overview insights** — headcount and min / max / avg / median salary *per country* | Answers Q1 and Q3 at a glance |

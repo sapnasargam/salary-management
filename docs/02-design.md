@@ -37,13 +37,15 @@ the Angular dev server proxies `/api` to `:8080`.
 | Seeding | Deterministic generator (fixed random seed) + JDBC batch insert, idempotent | Same data every run ⇒ reproducible demos/tests. Batch insert of 10k rows takes < 1 s. |
 | Errors | RFC 7807 `ProblemDetail` with field errors | Standard, UI can map field errors to form controls. |
 | UI | Angular 19 standalone components + Angular Material | Role asks for Angular; Material gives an accessible table/paginator/forms out of the box. |
+| Visual design | Incubyte palette (#014d43 green, #d3fe73 lime, #ebfff6 mint), Fraunces + Inclusive Sans, pill buttons | Applied by overriding Material's `--mat-sys-*` design tokens in one place (`styles.scss`) instead of styling each component. |
+| Deployment | One Docker image; `render.yaml` blueprint | UI is bundled into the jar, so there is a single thing to deploy. An empty database auto-seeds on start. |
 
 ## Data model
 
 ```
 country(code PK, name, currency)
-employee(id PK, employee_code UNIQUE, full_name, email UNIQUE, job_title, department,
-         country_code FK → country, annual_salary, hire_date, created_at, updated_at)
+employee(id PK, full_name, email UNIQUE, job_title, department,
+         country_code FK → country, annual_salary, hire_date)
 indexes: country_code, (country_code, job_title), department, full_name
 ```
 
@@ -61,8 +63,18 @@ indexes: country_code, (country_code, job_title), department, full_name
 | GET | `/api/insights/countries/{code}` | Country summary + breakdown by job title and department |
 
 ## Performance considerations
+Measured locally with the 10,000-employee seed (warm JVM):
+
+| Operation | Time |
+|-----------|------|
+| Seed 10,000 employees (JDBC batch) | ~100 ms |
+| `GET /api/employees` (page of 25) | ~40 ms |
+| Search + country filter + salary sort | ~30 ms |
+| `GET /api/insights/countries` (all 10k aggregated) | ~60 ms |
+| `GET /api/insights/countries/IN` | ~30 ms |
+
 - 10k rows: list queries are indexed and paginated (default page size 25).
-- Insights load a 4-column projection (~10k rows) and aggregate in memory: measured in tens of ms.
+- Insights load a 4-column projection (~10k rows) and aggregate in memory.
 - **If this grew to 1M+ employees**: move min/max/avg/count into SQL `GROUP BY` (Postgres also gives
   `percentile_cont` for median), or maintain a pre-aggregated table refreshed on write; add caching
   with invalidation on employee writes.

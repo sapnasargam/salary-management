@@ -29,9 +29,3 @@ app:
     random-seed: 42
     # When true, existing employees are deleted and the dataset regenerated.
     reset: false
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health
