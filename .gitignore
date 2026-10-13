@@ -1,0 +1,23 @@
+# Java / Maven
+backend/target/
+*.class
+*.log
+
+# SQLite databases
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+data/
+
+# Node / Angular
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# IDE / OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
