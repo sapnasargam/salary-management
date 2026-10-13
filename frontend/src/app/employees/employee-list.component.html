@@ -1,0 +1,130 @@
+<header class="page-header">
+  <div>
+    <h1>Employees</h1>
+    <p class="subtitle">{{ result().totalElements | number }} {{ hasActiveFilters ? 'matching' : 'total' }} employees</p>
+  </div>
+  <button mat-flat-button (click)="openCreate()" [disabled]="!referenceData()">
+    <mat-icon>person_add</mat-icon> Add employee
+  </button>
+</header>
+
+<form class="filters" [formGroup]="filters">
+  <mat-form-field class="search" subscriptSizing="dynamic">
+    <mat-label>Search name or e-mail</mat-label>
+    <mat-icon matPrefix>search</mat-icon>
+    <input matInput formControlName="search" autocomplete="off" />
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Country</mat-label>
+    <mat-select formControlName="country">
+      <mat-option value="">All countries</mat-option>
+      @for (country of referenceData()?.countries; track country.code) {
+        <mat-option [value]="country.code">{{ country.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Department</mat-label>
+    <mat-select formControlName="department">
+      <mat-option value="">All departments</mat-option>
+      @for (department of referenceData()?.departments; track department) {
+        <mat-option [value]="department">{{ department }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Job title</mat-label>
+    <mat-select formControlName="jobTitle">
+      <mat-option value="">All job titles</mat-option>
+      @for (title of referenceData()?.jobTitles; track title) {
+        <mat-option [value]="title">{{ title }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  @if (hasActiveFilters) {
+    <button mat-button type="button" (click)="clearFilters()"><mat-icon>filter_alt_off</mat-icon> Clear</button>
+  }
+</form>
+
+<div class="table-card">
+  <div class="progress">
+    @if (loading()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+  </div>
+
+  @if (loadError(); as message) {
+    <p class="state error" role="alert">
+      {{ message }}
+    </p>
+  }
+
+  <div class="table-scroll">
+    <table mat-table [dataSource]="result().content" matSort [matSortActive]="sort.active"
+           [matSortDirection]="sort.direction" matSortDisableClear (matSortChange)="onSort($event)">
+      <ng-container matColumnDef="fullName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+        <td mat-cell *matCellDef="let e">
+          <div class="name">{{ e.fullName }}</div>
+          <div class="email">{{ e.email }}</div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="jobTitle">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Job title</th>
+        <td mat-cell *matCellDef="let e">{{ e.jobTitle }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="department">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Department</th>
+        <td mat-cell *matCellDef="let e">{{ e.department }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="country">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Country</th>
+        <td mat-cell *matCellDef="let e">{{ e.countryName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="annualSalary">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header arrowPosition="before" class="num">Annual salary</th>
+        <td mat-cell *matCellDef="let e" class="num">{{ e.annualSalary | currency: e.currency : 'symbol-narrow' : '1.0-0' }}
+          <span class="ccy">{{ e.currency }}</span></td>
+      </ng-container>
+
+      <ng-container matColumnDef="hireDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Hired</th>
+        <td mat-cell *matCellDef="let e">{{ e.hireDate | date: 'mediumDate' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef><span class="cdk-visually-hidden">Actions</span></th>
+        <td mat-cell *matCellDef="let e" class="actions">
+          <button mat-icon-button matTooltip="Edit" [attr.aria-label]="'Edit ' + e.fullName" (click)="openEdit(e)"
+                  [disabled]="!referenceData()">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Delete" [attr.aria-label]="'Delete ' + e.fullName"
+                  (click)="confirmDelete(e)">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="state" [attr.colspan]="displayedColumns.length">
+          @if (!loading()) { No employees match these filters. }
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <mat-paginator [length]="result().totalElements" [pageIndex]="pageIndex" [pageSize]="pageSize"
+                 [pageSizeOptions]="pageSizeOptions" showFirstLastButtons (page)="onPage($event)"
+                 aria-label="Select page of employees" />
+</div>
